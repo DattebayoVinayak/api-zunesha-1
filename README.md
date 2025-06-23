@@ -804,3 +804,4 @@ Don't forget to leave a star 🌟.
 "# hianime-scrapper" 
 # hianime-scrapper
 "# api-zunesha" 
+"# api-zunesha1" 
