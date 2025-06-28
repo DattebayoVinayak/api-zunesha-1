@@ -5,7 +5,7 @@ export const axiosInstance = async (endpoint) => {
   try {
     const response = await axios.get(config.baseurl + endpoint, {
       headers: {
-        ...config.headers,
+        ...(config.headers || {}),
       },
     });
 

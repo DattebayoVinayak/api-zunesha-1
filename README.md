@@ -800,8 +800,3 @@ Don't forget to leave a star 🌟.
   src="https://starchart.cc/yahyamomin/hianime-API.svg?variant=adaptive"
   alt=""
 />
-"# hianime-scrapper" 
-"# hianime-scrapper" 
-# hianime-scrapper
-"# api-zunesha" 
-"# api-zunesha1" 

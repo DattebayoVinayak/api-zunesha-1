@@ -7,12 +7,13 @@ const handler = (fn) => {
 
       return success(c, result, null);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
+      console.error(error);
 
       if (error.statusCode) {
         return fail(c, error.message, error.statusCode, error.details);
       }
-      return fail(c, 'internal server error', 500);
+      return fail(c, error.message, 500);
     }
   };
 };
