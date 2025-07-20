@@ -1,5 +1,5 @@
 const config = {
-  baseurl: 'https://hianime.bz',
+  baseurl: 'https://hianimez.to',
   aniplayUrl: 'https://aniplaynow.live',
 
   headers: {
