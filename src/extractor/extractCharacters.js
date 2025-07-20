@@ -50,7 +50,7 @@ export const extractCharacters = (html) => {
   };
 
   const characters = $('.bac-item');
-  if (!characters.length) throw new Error();
+  if (!characters.length) return { response };
   $(characters).each((i, el) => {
     const obj = {
       name: null,
@@ -60,32 +60,55 @@ export const extractCharacters = (html) => {
       voiceActors: [],
     };
     const characterDetail = $(el).find('.per-info').first();
-    const voiceActorsDetail = $(el).find('.per-info-xx');
+    const voiceActorsDetail = $(el).find('.per-info-xx').length
+      ? $(el).find('.per-info-xx')
+      : $(el).find('.rtl');
 
     obj.name = $(characterDetail).find('.pi-detail .pi-name a').text();
     obj.role = $(characterDetail).find('.pi-detail .pi-cast').text();
-    obj.id = $(characterDetail)
-      .find('.pi-avatar')
-      .attr('href')
-      .replace(/^\//, '')
-      .replace('/', ':');
+    obj.id = $(characterDetail).find('.pi-avatar').length
+      ? $(characterDetail).find('.pi-avatar').attr('href').replace(/^\//, '').replace('/', ':')
+      : null;
     obj.imageUrl = $(characterDetail).find('.pi-avatar img').attr('data-src');
 
-    obj.voiceActors = $(voiceActorsDetail)
-      .find('.pix-list a')
-      .map((index, item) => {
-        const innerObj = {
-          name: null,
-          id: null,
-          imageUrl: null,
-        };
-        innerObj.name = $(item).attr('title');
-        innerObj.id = $(item).attr('href').replace(/^\//, '').replace('/', ':');
-        innerObj.imageUrl = $(item).find('img').attr('data-src');
+    if (!voiceActorsDetail.length) {
+      response.push(obj);
+      return;
+    }
+    const hasMultiple = $(voiceActorsDetail).hasClass('per-info-xx');
 
-        return innerObj;
-      })
-      .get();
+    if (hasMultiple) {
+      $(voiceActorsDetail)
+        .find('.pix-list a')
+        .each((index, item) => {
+          const innerObj = {
+            name: null,
+            id: null,
+            imageUrl: null,
+            cast: null,
+          };
+          innerObj.name = $(item).attr('title');
+          innerObj.id = $(item).attr('href').replace(/^\//, '').replace('/', ':');
+          innerObj.imageUrl = $(item).find('img').attr('data-src');
+
+          obj.voiceActors.push(innerObj);
+        });
+    } else {
+      const innerObj = {
+        name: null,
+        id: null,
+        imageUrl: null,
+        cast: null,
+      };
+      innerObj.id = $(voiceActorsDetail).find('.pi-avatar').length
+        ? $(voiceActorsDetail).find('.pi-avatar').attr('href').replace(/^\//, '').replace('/', ':')
+        : null;
+      innerObj.imageUrl = $(voiceActorsDetail).find('.pi-avatar img').attr('data-src');
+      innerObj.name = $(voiceActorsDetail).find('.pi-avatar img').attr('alt');
+      innerObj.cast = $(voiceActorsDetail).find('.pi-cast').text();
+
+      obj.voiceActors.push(innerObj);
+    }
 
     response.push(obj);
   });
