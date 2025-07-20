@@ -1,0 +1,10 @@
+node_modules/
+.git/
+.husky/
+src/tests/
+bun.lock
+bunfig.toml
+.eslintrc.js
+.prettierrc
+*.md
+cop_file.py
