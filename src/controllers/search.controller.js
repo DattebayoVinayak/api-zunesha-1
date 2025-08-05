@@ -3,27 +3,33 @@ import { axiosInstance } from '../services/axiosInstance';
 import { NotFoundError, validationError } from '../utils/errors';
 
 const searchController = async (c) => {
-  const keyword = c.req.query('keyword') || null;
-  const page = c.req.query('page') || 1;
+    const keyword = c.req.query('keyword') || null;
+    const page = c.req.query('page') || 1;
 
-  if (!keyword) throw new validationError('query is required');
+    const params = {
+        keyword,
+        page,
+        ...c.req.query()
+    };
 
-  const noSpaceKeyword = keyword.trim().toLowerCase().replace(/\s+/g, '+');
+    if (!keyword) throw new validationError('query is required');
 
-  const endpoint = `/search?keyword=${noSpaceKeyword}&page=${page}`;
-  const result = await axiosInstance(endpoint);
+    const noSpaceKeyword = keyword.trim().toLowerCase().replace(/\s+/g, '+');
 
-  if (!result.success) {
-    throw new validationError('make sure given endpoint is correct');
-  }
+    const endpoint = `/search`;
+    const result = await axiosInstance(endpoint, params);
 
-  const response = extractListPage(result.data);
+    if (!result.success) {
+        throw new validationError('make sure given endpoint is correct');
+    }
 
-  if (response.response.length < 1) {
-    throw new NotFoundError('page not found');
-  }
+    const response = extractListPage(result.data);
 
-  return response;
+    if (response.response.length < 1) {
+        throw new NotFoundError('page not found');
+    }
+
+    return response;
 };
 
 export default searchController;
